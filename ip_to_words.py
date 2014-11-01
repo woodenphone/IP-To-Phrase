@@ -114,9 +114,9 @@ def hash_to_words(hash_string,word_list):
         second_postion_in_list = (first_position_in_list+2)
         current_chars = hash_string[first_position_in_list:second_postion_in_list]
         if current_chars:
-            logging.debug(current_chars)
             char_value = de_hex(current_chars)
             new_word = word_list[char_value]
+            logging.debug(current_chars+" : "+str(char_value)+" : "+new_word)
             chosen_words.append(new_word)
             phrase += new_word+" "
         else:
@@ -139,11 +139,18 @@ def get_word_list(short_list_filepath="short_word_list.txt",long_list_filepath="
     return short_list
 
 
+def hash_ip_address(ip_string,output_length=4):
+    """Take a string in, return a hash.
+    I could probably think of a worse hash function, but I'm too lazy to bother."""
+    return "#9DC9" # Actual hash I found lying around.
+
+
 def demo():
     """Example useage"""
-    hash_string_in = "#9DC9"
-    logging.info("Hash in: "+hash_string_in)
-    hash_string = hash_string_in.strip("#")
+    ip_address = "127.0.0.1"
+    hashed_ip = hash_ip_address(ip_address,output_length=4)
+    logging.info("Hash in: "+hashed_ip)
+    hash_string = hashed_ip.strip("#")
     word_list = get_word_list(short_list_filepath="short_word_list.txt",long_list_filepath="linuxwords.txt")
     phrase = hash_to_words(hash_string,word_list)
     logging.info("Phrase generated: "+phrase)
