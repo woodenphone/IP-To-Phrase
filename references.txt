@@ -1,0 +1,4 @@
+Sources used
+
+linuxwords.txt from:
+http://www.cs.duke.edu/~ola/ap/linuxwords
