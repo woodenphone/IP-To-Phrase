@@ -11,7 +11,7 @@
 
 import logging
 import os
-
+import random
 
 
 def setup_logging(log_file_path):
@@ -89,28 +89,66 @@ def de_hex(hex_string):
     return int(hex_string, 16)
 
 
-
-def assign_word(word_list,value):
-    pass
-
 def shorten_list(list_to_shorten,desired_length):
     assert (len(list_to_shorten) >= desired_length)# Can't shorten to less than what we have
     working_list = list_to_shorten
     results_list = []
     counter = 0
     while len(results_list) < desired_length:
-        # keep every 10th word
-        results_list.append(working_list.pop(counter*10))
+        position_to_use = random.randint(0, len(working_list))
+        results_list.append(working_list.pop(position_to_use))
         counter += 1
     return results_list
 
 
+def hash_to_words(hash_string,word_list):
+    phrase = ""
+    chosen_words = []
+    counter = 0
+    while True:
+        counter += 1
+        # Grab 2 chars
+        first_position_in_list = ((counter-1)*2) # Increase by 2 each time
+        second_postion_in_list = (first_position_in_list+2)
+        current_chars = hash_string[first_position_in_list:second_postion_in_list]
+        if current_chars:
+            logging.debug(current_chars)
+            char_value = de_hex(current_chars)
+            new_word = word_list[char_value]
+            chosen_words.append(new_word)
+            phrase += new_word+" "
+        else:
+            break
+    clean_phrase = phrase.strip()
+    return clean_phrase
+
+
+def get_word_list(short_list_filepath="short_word_list.txt",long_list_filepath="linuxwords.txt"):
+    if os.path.exists(short_list_filepath):
+        short_list = import_list(short_list_filepath)
+    else:
+        logging.info("Generating short word list.")
+        word_list = import_list(long_list_filepath)
+        logging.debug(repr(len(word_list)))
+        short_list = shorten_list(list_to_shorten=word_list,desired_length=256)
+        logging.debug(repr(short_list))
+        append_list(lines=short_list, list_file_path=short_list_filepath, initial_text="# List of words", overwrite=True)
+    return short_list
+
+
+def demo():
+    hash_string_in = "#9DC9"
+    logging.info("Hash in: "+hash_string_in)
+    hash_string = hash_string_in.strip("#")
+    word_list = get_word_list(short_list_filepath="short_word_list.txt",long_list_filepath="linuxwords.txt")
+    phrase = hash_to_words(hash_string,word_list)
+    logging.info("Phrase generated: "+phrase)
+    return
+
+
 def main():
-    word_list = import_list(listfilename="linuxwords.txt")
-    logging.debug(repr(len(word_list)))
-    short_list = shorten_list(list_to_shorten=word_list,desired_length=256)
-    logging.debug(short_list)
-    pass
+    demo()
+
 
 if __name__ == '__main__':
     # Setup logging
