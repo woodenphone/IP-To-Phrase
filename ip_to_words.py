@@ -90,6 +90,7 @@ def de_hex(hex_string):
 
 
 def shorten_list(list_to_shorten,desired_length):
+    """Shorten a list using random selection"""
     assert (len(list_to_shorten) >= desired_length)# Can't shorten to less than what we have
     working_list = list_to_shorten
     results_list = []
@@ -102,6 +103,7 @@ def shorten_list(list_to_shorten,desired_length):
 
 
 def hash_to_words(hash_string,word_list):
+    """Take a string of hex characters and make a phrase from it"""
     phrase = ""
     chosen_words = []
     counter = 0
@@ -124,6 +126,7 @@ def hash_to_words(hash_string,word_list):
 
 
 def get_word_list(short_list_filepath="short_word_list.txt",long_list_filepath="linuxwords.txt"):
+    """Load a wordlist, and shorten it if needed"""
     if os.path.exists(short_list_filepath):
         short_list = import_list(short_list_filepath)
     else:
@@ -137,6 +140,7 @@ def get_word_list(short_list_filepath="short_word_list.txt",long_list_filepath="
 
 
 def demo():
+    """Example useage"""
     hash_string_in = "#9DC9"
     logging.info("Hash in: "+hash_string_in)
     hash_string = hash_string_in.strip("#")
